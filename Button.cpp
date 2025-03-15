@@ -1,11 +1,11 @@
 #include "Button.h"
 
-Button::Button(sf::Vector2f& pos, sf::Vector2f& size, std::string& label) {
+Button::Button(sf::Vector2f pos, sf::Vector2f size, std::string label) : text(font, label), isHovered(false) {
 	shape.setPosition(pos);
 	shape.setSize(size);
 
-	text.setString(label);
 	text.setCharacterSize(24);
+	text.setFillColor(sf::Color::Black);
 	text.setPosition(sf::Vector2f(pos.x + 10, pos.y + 10));
 }
 
