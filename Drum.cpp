@@ -20,7 +20,7 @@ void Drum::startSpinning(int seed) {
 }
 
 void Drum::stop(int seed) {
-    if (isStopping) return;
+    if (isStopping || !isSpinning) return;
 
     int targetSymbol = seed % (numSymbols * 3) + numSymbols;
     targetOffset = targetSymbol * symbolHeight;
