@@ -1,9 +1,11 @@
 #include "Drum.h"
 
-Drum::Drum(sf::Texture& tex, int height, int number, int windowPos)
+Drum::Drum(sf::Texture& tex, int height, int number, int windowPos, Symbol order[5])
     : texture(tex), sprite(sf::Sprite(texture)), symbolHeight(height), numSymbols(number) {
+    for (int i = 0; i < 5; i++) { this->order[i] = order[i]; }
     texture.setRepeated(true);
     currentOffset = 0;
+    targetOffset = 0;
     windowPosition = windowPos;
     spinSpeed = 400;
     isSpinning = false;
@@ -54,6 +56,6 @@ bool Drum::isStopped() {
     return !isSpinning && !isStopping;
 }
 
-int Drum::getCurrentSymbol() {
-    return static_cast<int>((currentOffset + symbolHeight) / symbolHeight) % numSymbols;
+Drum::Symbol Drum::getCurrentSymbol() {
+    return order[static_cast<int>((currentOffset + symbolHeight) / symbolHeight) % numSymbols];
 }

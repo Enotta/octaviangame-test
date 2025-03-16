@@ -6,6 +6,10 @@
 #include <iostream>
 
 class Drum {
+
+public:
+    enum Symbol;
+
 private:
     sf::Sprite sprite;
     sf::Texture texture;
@@ -17,13 +21,15 @@ private:
     float spinSpeed;
     bool isSpinning;
     bool isStopping;
+    Symbol order[5];
 
 public:
-    Drum(sf::Texture& tex, int height, int number, int windowPos);
+    enum Symbol { Heart, Triangle, Star, Hexagon, Lightning };
+    Drum(sf::Texture& tex, int height, int number, int windowPos, Symbol order[5]);
     void startSpinning(int seed);
     void stop(int seed);
     void update(float deltaTime);
     void draw(sf::RenderWindow& window);
     bool isStopped();
-    int getCurrentSymbol();
+    Symbol getCurrentSymbol();
 };

@@ -1,17 +1,36 @@
 #include "Game.h"
 
-Game::Game(sf::Texture texture, int height, int number)
+Game::Game(sf::Texture* textures, int height, int number)
     : window(sf::VideoMode({ 1000, 600 }), "Slot Machine"),
-    drum1(texture, height, number, 50),
-    drum2(texture, height, number, 50 + height),
-    drum3(texture, height, number, 50 + height * 2),
-    startButton(sf::Vector2f(700, 325), sf::Vector2f(200, 50), static_cast<std::string>("Start")),
-    stopButton(sf::Vector2f(700, 225), sf::Vector2f(200, 50), static_cast<std::string>("Stop")),
+    drum1(textures[0], height, number, 50, new Drum::Symbol[5] { 
+            Drum::Symbol::Star,
+            Drum::Symbol::Hexagon,
+            Drum::Symbol::Heart,
+            Drum::Symbol::Lightning,
+            Drum::Symbol::Triangle
+        }),
+    drum2(textures[1], height, number, 50 + height, new Drum::Symbol[5]{
+            Drum::Symbol::Triangle,
+            Drum::Symbol::Hexagon,
+            Drum::Symbol::Lightning,
+            Drum::Symbol::Star,
+            Drum::Symbol::Heart
+        }),
+    drum3(textures[2], height, number, 50 + height * 2, new Drum::Symbol[5]{
+            Drum::Symbol::Lightning,
+            Drum::Symbol::Hexagon,
+            Drum::Symbol::Heart,
+            Drum::Symbol::Star,
+            Drum::Symbol::Triangle
+        }),
+    startButton(sf::Vector2f(700, 325), sf::Vector2f(200, 50), static_cast<std::string>("Start"), &font),
+    stopButton(sf::Vector2f(700, 225), sf::Vector2f(200, 50), static_cast<std::string>("Stop"), &font),
     currentState(State::Idle) {
     startButton.setOnClick([this]() {
-        if (currentState == State::Idle || currentState == State::Win) {
+        if (currentState == State::Idle) {
             currentState = State::Spinning;
             srand(time(NULL));
+            winAmount -= 25;
             drum1.startSpinning(rand());
             drum2.startSpinning(rand());
             drum3.startSpinning(rand());
@@ -54,30 +73,22 @@ void Game::update() {
         drum3.update(deltaTime);
 
         if (drum1.isStopped() && drum2.isStopped() && drum3.isStopped()) {
-            calculateWin();
-            currentState = State::Win;
-            timer.restart();
-        }
-    }
-    else if (currentState == State::Win) {
-        if (timer.getElapsedTime().asSeconds() >= 3) {
             currentState = State::Idle;
+            calculateWin();
+            timer.restart();
         }
     }
 }
 
 void Game::calculateWin() {
-    int s1 = drum1.getCurrentSymbol();
-    int s2 = drum2.getCurrentSymbol();
-    int s3 = drum3.getCurrentSymbol();
+    Drum::Symbol s1 = drum1.getCurrentSymbol();
+    Drum::Symbol s2 = drum2.getCurrentSymbol();
+    Drum::Symbol s3 = drum3.getCurrentSymbol();
     if (s1 == s2 && s2 == s3) {
-        winAmount = 100;
+        winAmount += 500;
     }
     else if (s1 == s2 || s2 == s3 || s1 == s3) {
-        winAmount = 50;
-    }
-    else {
-        winAmount = 0;
+        winAmount += 50;
     }
 }
 
@@ -87,6 +98,12 @@ void Game::render() {
     background.setSize(sf::Vector2f(1000, 600));
     background.setFillColor(sf::Color::White);
 
+    sf::Text score(font, static_cast<std::string>("Score: ") + std::to_string(winAmount));
+    score.setPosition(sf::Vector2f( 225, 550));
+    score.setFillColor(sf::Color::Black);
+    score.setCharacterSize(24);
+
+
     window.clear();
     window.draw(background);
     drum1.draw(window);
@@ -94,5 +111,6 @@ void Game::render() {
     drum3.draw(window);
     startButton.draw(window);
     stopButton.draw(window);
+    window.draw(score);
     window.display();
 }

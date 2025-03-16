@@ -6,13 +6,13 @@
 class Button {
 private:
 	sf::RectangleShape shape;
-	const sf::Font font = sf::Font("assets/StalinistOne-Regular.ttf");
+	sf::Font* font;
 	sf::Text text;
 	std::function<void()> onClick;
 	bool isHovered;
 
 public:
-	Button(sf::Vector2f pos, sf::Vector2f size, std::string label);
+	Button(sf::Vector2f pos, sf::Vector2f size, std::string label, sf::Font* font);
 	void handleEvent(sf::Event& event, sf::RenderWindow& window);
 	void draw(sf::RenderWindow& window);
 	void setOnClick(std::function<void()> callback);

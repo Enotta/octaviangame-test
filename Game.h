@@ -11,13 +11,14 @@ private:
     sf::RenderWindow window;
     Drum drum1, drum2, drum3;
     Button startButton, stopButton;
+    sf::Font font = sf::Font("assets/StalinistOne-Regular.ttf");
     int winAmount;
-    enum class State { Idle, Spinning, Win };
+    enum class State { Idle, Spinning };
     State currentState;
     sf::Clock timer;
 
 public:
-	Game(sf::Texture texture, int height, int number);
+	Game(sf::Texture* textures, int height, int number);
 	void run();
 	void update();
 	void calculateWin();

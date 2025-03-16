@@ -1,6 +1,6 @@
 #include "Button.h"
 
-Button::Button(sf::Vector2f pos, sf::Vector2f size, std::string label) : text(font, label), isHovered(false) {
+Button::Button(sf::Vector2f pos, sf::Vector2f size, std::string label, sf::Font* font) : font(font), text(*font, label), isHovered(false) {
 	shape.setPosition(pos);
 	shape.setSize(size);
 
