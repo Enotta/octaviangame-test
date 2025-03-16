@@ -35,6 +35,7 @@ Game::Game(sf::Texture* textures, int height, int number)
             drum2.startSpinning(rand());
             drum3.startSpinning(rand());
             timer.restart();
+            expireTimer.restart();
         }
     });
 
@@ -66,6 +67,16 @@ void Game::run() {
 }
 
 void Game::update() {
+    if (expireTimer.getElapsedTime().asSeconds() > 5) {
+        if (currentState == State::Spinning) {
+            expireTimer.reset();
+            srand(time(NULL));
+            drum1.stop(rand());
+            drum2.stop(rand());
+            drum3.stop(rand());
+        }
+    }
+
     float deltaTime = timer.restart().asSeconds();
     if (currentState == State::Spinning) {
         drum1.update(deltaTime);

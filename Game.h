@@ -16,6 +16,7 @@ private:
     enum class State { Idle, Spinning };
     State currentState;
     sf::Clock timer;
+    sf::Clock expireTimer;
 
 public:
 	Game(sf::Texture* textures, int height, int number);
